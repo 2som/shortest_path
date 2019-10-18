@@ -1,34 +1,20 @@
 
-function createArray(num, dimensions){
+function createArray(symbol, dimensions){
     
     let array = []
     for (let i = 0; i < dimensions; i++){
         array.push([]);
         for(let j = 0; j<dimensions; j++){
-            array[i].push(num);
+            array[i].push(symbol);
         }
     }
     
-    array.push(['*'])
+    
     return array
 }
+console.log(createArray(0, 10))
 function walls(array){
-    for (let i = 0; i < dimensions; i++){
-        if (i == 0 || i == dimensions - 1){
-            for(let j = 0; j < dimensions; j++){
-                array[i][j] = 0
-            }
-        }
-        for(let j = 0; j < dimensions; j++){
-            if (j == 0 || j == dimensions -1){
-                array[i][j] = 0
-            }
-        }
-        
     
-    
-    }
-    return array
 }
 
 
