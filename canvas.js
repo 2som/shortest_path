@@ -15,14 +15,17 @@ let square_height = Math.floor(height / number_of_columns);
 
 function draw_shortest(array){
     let path = solve(array)
-    console.log(path)
+    // console.log(path)
     for (let coord of path){
         coord = coord.join('')
+        // console.log(coord)
         let column = coord[0]
-        let row = coord[3]
+        let row = coord[1]
         map[column][row] = 'p'
+        // console.log
             
     }
+    // console.log(map)
 }
 function draw(){
     for (let column of map){
@@ -32,17 +35,19 @@ function draw(){
                 ctx.fillStyle = 'white';
             }else if(row == 'p'){
                 ctx.fillStyle = 'green'
+                
             }else{
                 ctx.fillStyle = 'grey';
             }
             ctx.fillRect(position_from_left, position_from_top, square_width, square_height);
             position_from_left += square_width;
         }
-        console.log(position_from_top);
+        // console.log(position_from_top);
         position_from_top += square_height;
         position_from_left = 0;
     }
 }
-draw_shortest(map);
 console.log(map)
+draw_shortest(map);
+// console.log(map)
 draw();

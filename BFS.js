@@ -1,12 +1,7 @@
+import {createMap} from '/BFS.js'
 
 
-
-export const array = [['s', '.', '.', '#', '.', '.', '.'],
-             ['.', '#', '.', '.', '.', '#', '.'],
-             ['.', '#', '.', '.', '.', '#', '.'],
-             ['.', '.', '#', '#', '.', '.', '.'],
-             ['#', '.', '#', 'e', '.', '#', '.'],   
-            ]
+export const array = createMap(9)
 
 
 export const number_of_rows = 7
@@ -14,10 +9,12 @@ export const number_of_columns = 5
 
 const starting_column = 0
 const starting_row = 0
-let end_cords = '3, 4'
+let end_cords = '43'
 
 let queue = []
-let prev = {}
+let prev = {
+    
+}
 
 
 
@@ -65,8 +62,8 @@ function explore_neighbours(column, row){
         }
         enqueue([next_column, next_row], queue)
         visited[next_column][next_row] = true
-        prev[`${next_column}, ${next_row}`] = {
-            parent: [`${column}, ${row}`]
+        prev[`${next_column}${next_row}`] = {
+            parent: [`${column}${row}`]
         }
         
 
@@ -76,11 +73,16 @@ function explore_neighbours(column, row){
 
 function reconstruct_path(node){
     let path = []
-    while(prev[node].parent != null){
+    console.log(node)
+    while(true){
         path.unshift(node)
         node = prev[node].parent
+        if (prev[node].parent == null){
+            path.unshift(node)
+            break
+        }
     }
-    return path
+   return path
 }
 
 export function solve(array){
@@ -88,7 +90,7 @@ export function solve(array){
     enqueue([starting_column, starting_row],queue )
 
     visited[starting_column][starting_row] = true
-    prev[`${starting_column}, ${starting_row}`] = {
+    prev[`${starting_column}${starting_row}`] = {
         parent: null,
     }
     
@@ -102,6 +104,7 @@ export function solve(array){
         explore_neighbours(column, row)
     }
     if(reached_end){
+        console.log(prev)
         return reconstruct_path([end_cords])
     }
     return -1

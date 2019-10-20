@@ -12,7 +12,7 @@ function createArray(symbol, dimensions){
     
     return array
 }
-console.log(createArray(0, 10))
+console.log(createArray(1, 10))
 function walls(array){
     
 }
