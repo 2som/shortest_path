@@ -44,7 +44,7 @@ function obstacles(num, array, dimensions){
 
 export function createMap(dimensions){
     let map = createArray('.', dimensions)
-    obstacles(25, map, dimensions)
+    obstacles(40, map, dimensions)
     
     //start
     map[important_coords.start.column][important_coords.start.row] = 's'

@@ -1,7 +1,7 @@
 import {createMap, dimensions, important_coords} from '/map.js'
 
 
-export const array = createMap(dimensions)
+
 
 export const number_of_rows = dimensions
 export const number_of_columns = dimensions
@@ -10,15 +10,8 @@ const starting_column = important_coords.start.column
 const starting_row = important_coords.start.row
 let end_cords = `${important_coords.finish.column}${important_coords.finish.row}`
 
-let queue = []
-let prev = {
-    
-}
-let visited = array.map(element => {
-    return element.map(
-        row => false
-    )
-})
+
+
 
 //directions
 let direction_row = [-1, +1, 0, 0]
@@ -36,7 +29,7 @@ function dequeue(array){
     return value
 }
 
-function explore_neighbours(column, row){
+function explore_neighbours(column, row, visited, array, queue, prev){
     
     for(let i = 0; i< 4; i++){
         let next_row = row + direction_row[i]
@@ -63,7 +56,7 @@ function explore_neighbours(column, row){
     }
 }
 
-function reconstruct_path(node){
+function reconstruct_path(node, prev){
     let path = []
     console.log(node)
     while(true){
@@ -77,8 +70,15 @@ function reconstruct_path(node){
    return path
 }
 
-export function solve(array){
+function solve(array){
+    let queue = []
+    let prev = {}
     let reached_end = false;
+    let visited = array.map(element => {
+        return element.map(
+            row => false
+        )
+    }) 
     enqueue([starting_column, starting_row], queue)
 
     visited[starting_column][starting_row] = true
@@ -100,16 +100,27 @@ export function solve(array){
             reached_end = true;
             break
         }
-        explore_neighbours(column, row)
+        explore_neighbours(column, row, visited, array, queue, prev)
     }
     if(reached_end){
         // console.log(prev)
-        return reconstruct_path([end_cords])
+        return reconstruct_path([end_cords], prev)
     }
     return -1
 }
 
-// console.log(reconstruct_path(end_cords.join(', ')))
+
+export function BFS(){
+   
+    let array = createMap(dimensions)
+    let path = solve(array)
+    while(path == -1){
+        array = createMap(dimensions)
+        path = solve(array)
+    }
+    return [path, array]
+}
+
 
 
 // console.log(prev[end_cords.join(', '). ])
