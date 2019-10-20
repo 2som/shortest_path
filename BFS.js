@@ -109,7 +109,6 @@ export function solve(array){
     return -1
 }
 
-
 // console.log(reconstruct_path(end_cords.join(', ')))
 
 
