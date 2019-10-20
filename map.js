@@ -1,3 +1,15 @@
+export const dimensions = 9
+export const important_coords = {
+    start:{
+        row:   0,
+        column: 0,
+    },
+    finish: {
+        row: Math.floor(dimensions / 2),
+        column: dimensions -1
+    }
+}
+
 
 function createArray(symbol, dimensions){
     
@@ -12,46 +24,41 @@ function createArray(symbol, dimensions){
     
     return array
 }
-console.log(createArray(1, 10))
-function walls(array){
-    
-}
 
 
 function obstacles(num, array, dimensions){
     for (let i= 0; i < num; i++){
         let randomColumn = Math.floor(Math.random() * dimensions)
         let randomRow = Math.floor(Math.random() * dimensions)
-        if (array[randomColumn][randomRow] == '*' || array[randomColumn][randomRow] == 0){
-            i--;
-            continue;
+        if(array[randomColumn][randomRow] == '#'){
+            i--
+            continue
         }
         
-        array[randomColumn][randomRow] = 0  
+        array[randomColumn][randomRow] = '#'  
     }
     
 }
 
-export const dimensions = 9
+
 
 export function createMap(dimensions){
-    let map = createArray(1, dimensions)
-    walls(map)
-    obstacles(10, map, dimensions)
+    let map = createArray('.', dimensions)
+    obstacles(25, map, dimensions)
     
     //start
-    map[dimensions - 1][Math.floor(dimensions / 2)] = 's'
+    map[important_coords.start.column][important_coords.start.row] = 's'
     //finish
-    map[0][Math.floor(dimensions / 2)] = 'w'
+    map[important_coords.finish.column][important_coords.finish.row] = 'f'
     
 
     return map
     
 }
 
-console.log(createMap(9))
+// console.log(createMap(9))
 // function finding_paths (array){
-//    let graph = createMap(9)
+
 
    
 

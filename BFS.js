@@ -1,25 +1,19 @@
-import {createMap} from '/BFS.js'
+import {createMap, dimensions, important_coords} from '/map.js'
 
 
-export const array = createMap(9)
+export const array = createMap(dimensions)
 
+export const number_of_rows = dimensions
+export const number_of_columns = dimensions
 
-export const number_of_rows = 7
-export const number_of_columns = 5
-
-const starting_column = 0
-const starting_row = 0
-let end_cords = '43'
+const starting_column = important_coords.start.column
+const starting_row = important_coords.start.row
+let end_cords = `${important_coords.finish.column}${important_coords.finish.row}`
 
 let queue = []
 let prev = {
     
 }
-
-
-
-
-
 let visited = array.map(element => {
     return element.map(
         row => false
@@ -31,15 +25,15 @@ let direction_row = [-1, +1, 0, 0]
 let direction_column = [0, 0 , +1 , -1]
 
 
-
-
-
-
 function enqueue(obj, array){
     array.push(obj)
 }
 function dequeue(array){
-    return array.shift()
+    let value = array.shift()
+    if (value == null){
+        return -1
+    }
+    return value
 }
 
 function explore_neighbours(column, row){
@@ -62,13 +56,11 @@ function explore_neighbours(column, row){
         }
         enqueue([next_column, next_row], queue)
         visited[next_column][next_row] = true
+        
         prev[`${next_column}${next_row}`] = {
             parent: [`${column}${row}`]
         }
-        
-
-    
-}
+    }
 }
 
 function reconstruct_path(node){
@@ -87,7 +79,7 @@ function reconstruct_path(node){
 
 export function solve(array){
     let reached_end = false;
-    enqueue([starting_column, starting_row],queue )
+    enqueue([starting_column, starting_row], queue)
 
     visited[starting_column][starting_row] = true
     prev[`${starting_column}${starting_row}`] = {
@@ -95,8 +87,15 @@ export function solve(array){
     }
     
     while (queue){
-        let [column, row] = dequeue(queue)
-        if (array[column][row] == 'e'){
+        
+        let value = dequeue(queue)
+        if (value == -1){
+            break
+        }
+        let [column, row] = value
+        
+        
+        if (array[column][row] == 'f'){
             // let end_cords = [column, row]
             reached_end = true;
             break
@@ -104,11 +103,12 @@ export function solve(array){
         explore_neighbours(column, row)
     }
     if(reached_end){
-        console.log(prev)
+        // console.log(prev)
         return reconstruct_path([end_cords])
     }
     return -1
 }
+
 
 // console.log(reconstruct_path(end_cords.join(', ')))
 

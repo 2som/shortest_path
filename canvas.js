@@ -13,8 +13,8 @@ let square_width = Math.floor(width / number_of_rows);
 let square_height = Math.floor(height / number_of_columns);
 
 
-function draw_shortest(array){
-    let path = solve(array)
+function draw_shortest(array, path){
+    
     // console.log(path)
     for (let coord of path){
         coord = coord.join('')
@@ -47,7 +47,14 @@ function draw(){
         position_from_left = 0;
     }
 }
-console.log(map)
-draw_shortest(map);
-// console.log(map)
-draw();
+
+// function validate_beatable_map(){
+//     do{
+//         let path = solve(array)
+//     }
+//     while(path != -1)
+//     return path
+// }
+
+    
+console.log(validate_beatable_map())
