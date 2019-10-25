@@ -1,5 +1,5 @@
 import {BFS, number_of_rows, number_of_columns} from '/BFS.js'
-
+import {important_coords} from '/map.js'
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
@@ -7,7 +7,6 @@ const ctx = canvas.getContext('2d');
 
 function draw_shortest(array, path){
     
-    // console.log(path)
     for (let coord of path){
         coord = coord.join('')
         // console.log(coord)
@@ -15,8 +14,9 @@ function draw_shortest(array, path){
         let row = coord[1]
         array[column][row] = 'p'
         // console.log
-            
+        
     }
+    
     return array
     // console.log(map)
 }
@@ -32,27 +32,34 @@ function draw(array){
     for (let column of array){
         // console.log(column)
         for (let row of column){
-            if (row == '.' || row == 's' || row =='e'){
-                ctx.fillStyle = 'white';
-            }else if(row == 'p'){
-                ctx.fillStyle = 'green'
-                
-            }else{
-                ctx.fillStyle = 'grey';
+            ctx.fillStyle = 'white' 
+            if (row == '#'){
+                ctx.fillStyle = 'grey'
             }
-            ctx.fillRect(position_from_left, position_from_top, square_width, square_height);
+            
+            ctx.strokeStyle = 'black'
+            ctx.strokeRect(position_from_left, position_from_top, square_width, square_height)
+            
+            if (row == 's' || row =='f'){
+                ctx.fillStyle = 'green'
+            }   
+            
+            ctx.fillRect(position_from_left, position_from_top, square_width, square_height)
+            
             position_from_left += square_width;
         }
-        // console.log(position_from_top);
         position_from_top += square_height;
         position_from_left = 0;
     }
 }
 function main(){
-    let [path, array] = BFS()
-    console.log(array)
-    console.log(path)
+    const [path, array] = BFS()
+    
     let solved_array = draw_shortest(array, path)
+    
+    
+    solved_array[important_coords.start.column][important_coords.start.row] = 's'
+    solved_array[important_coords.finish.column][important_coords.finish.row] = 'f'
     
     return draw(solved_array)
 }
