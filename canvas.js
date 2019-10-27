@@ -40,6 +40,7 @@ function draw(array){
             }else{
                 ctx.fillStyle = 'grey';
             }
+            
             ctx.fillRect(position_from_left, position_from_top, square_width, square_height);
             position_from_left += square_width;
         }
