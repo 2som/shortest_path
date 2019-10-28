@@ -96,14 +96,12 @@ function solve(array){
         
         
         if (array[column][row] == 'f'){
-            // let end_cords = [column, row]
             reached_end = true;
             break
         }
         explore_neighbours(column, row, visited, array, queue, prev)
     }
     if(reached_end){
-        // console.log(prev)
         return reconstruct_path([end_cords], prev)
     }
     return -1
@@ -118,11 +116,7 @@ export function BFS(){
         array = createMap(dimensions)
         path = solve(array)
     }
+    // console.log(array)
     return [path, array]
 }
-
-
-
-// console.log(prev[end_cords.join(', '). ])
-// let dupa = reconstruct_path([end_cords])
-// console.log(dupa)
+BFS()

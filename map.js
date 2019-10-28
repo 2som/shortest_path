@@ -1,11 +1,11 @@
 export const dimensions = 9
 export const important_coords = {
     start:{
-        row:   0,
+        row:   Math.floor(Math.random() * dimensions),
         column: 0,
     },
     finish: {
-        row: Math.floor(dimensions / 2),
+        row: Math.floor(Math.random()*dimensions),
         column: dimensions -1
     }
 }
@@ -44,7 +44,7 @@ function obstacles(num, array, dimensions){
 
 export function createMap(dimensions){
     let map = createArray('.', dimensions)
-    obstacles(40, map, dimensions)
+    obstacles(30, map, dimensions)
     
     //start
     map[important_coords.start.column][important_coords.start.row] = 's'
