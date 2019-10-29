@@ -7,8 +7,10 @@ import { dimensions } from './map.js';
 const canvas = document.getElementById('canvas');
 canvas.addEventListener("click", something, false)
 const ctx = canvas.getContext('2d');
-const [path, array] = BFS()
+let [path, array] = BFS()
+let user_path = []
 
+// console.log(check_patchs(user_path, path))
 let continue_animating = true;
 document.getElementById('checker').addEventListener('click', stop_animating)
 
@@ -22,47 +24,28 @@ let square_width = Math.floor(width / number_of_rows);
 let square_height = Math.floor(height / number_of_columns);
 
 let rects = create_rects(array)
-let user_path = []
-console.log('rects:', rects)
+
+// console.log('rects:', rects)
 
 function something(e){
-    // console.log(e.offsetX, e.offsetY)
-    
-    // console.log(rects)
+   
     for (let key of Object.keys(rects)){
         if (rects[key].active == 1 && e.offsetX >= rects[key].x && e.offsetX <= rects[key].x + square_width && e.offsetY >= rects[key].y && e.offsetY <= rects[key].y + square_height ){ 
-            // console.log(user_path.includes(`${key[0]}, ${key[1]}`))
-            if(user_path.includes(`${key[0]}, ${key[1]}`) == false){
-                user_path.push(`${key[0]}, ${key[1]}`)
+            
+            if(user_path.includes(key) == false){
+                user_path.push(key)
                 rects[key].symbol = 'p'
             }else{
-                user_path.splice(user_path.indexOf(`${key[0]}, ${key[1]}`), 1)
+                user_path.splice(user_path.indexOf(key), 1)
                 rects[key].symbol = '.'
             }
-           
         }
         else{
             continue
         }
     }
-    // console.log(width)
-}
-
-// function draw_shortest(array, path){
-//     let new_array = [...array]
-//     for (let coord of path){
-//         coord = coord.join('')
-//         // console.log(coord)
-//         let column = coord[0]
-//         let row = coord[1]
-//         new_array[column][row] = 'p'
-//         // console.log
-        
-//     }
     
-//     return new_array
-//     // console.log(map)
-// }
+}
 function draw (rects){
     let position_from_left = 0;
     let position_from_top = 0;
@@ -120,27 +103,40 @@ function create_rects(array){
 position_from_top = 0
 return rects
 }
-// function designate_path(){
-
-// }
 
 
-    console.log('array from BFS', array)
-    // console.log(path)
-    
-// console.log('array from bfs', array)
-// console.log('path', path)
-    
 
-// let solved_array = draw_shortest(array, path)
-// console.log('solved array', solved_array)
-
-function play(path){
+function play(){
     draw(rects)
+    
     if(!continue_animating){
        alert('break!')
+       
+       path.pop()
+       path.shift()
+       if (!user_path){
+           return false;
+       }
+       let raw_path = path.join(',').split(',')
+       let raw_user_path = user_path.join(',').split(',')
+       console.log('user',raw_user_path)
+       console.log('path', raw_path)
+       if(raw_user_path.length == raw_path.length && raw_user_path.every((value) => raw_path.includes(value))){
+        alert('wlasciwa droga')   
+        return true
+       }
+       else{
+           alert('zle')
+           return false
+       }
+       //    let raw
+       
+    
     }
     requestAnimationFrame(play)
 
 }
-play(path)
+draw(rects)
+play()
+
+
