@@ -57,12 +57,4 @@ export function createMap(dimensions){
 }
 
 // console.log(createMap(9))
-// function finding_paths (array){
-
-
-   
-
-
-
-
-
+// function finding_paths (array)
