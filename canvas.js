@@ -21,7 +21,10 @@ function draw_shortest(array, path){
     // console.log(map)
 }
 function draw(array){
+    let rects = []
     
+    
+
     let position_from_left = 0;
     let position_from_top = 0;
     let width = canvas.width;
@@ -29,28 +32,32 @@ function draw(array){
     let square_width = Math.floor(width / number_of_rows);
     let square_height = Math.floor(height / number_of_columns);
 
-    for (let column of array){
+    for (let column = 0; column<array.length; column++){
         // console.log(column)
-        for (let row of column){
+        for (let row = 0; row< array.length; row++){
             ctx.fillStyle = 'white' 
-            if (row == '#'){
+            if (array[column][row] == '#'){
                 ctx.fillStyle = 'grey'
             }
             
             ctx.strokeStyle = 'black'
             ctx.strokeRect(position_from_left, position_from_top, square_width, square_height)
             
-            if (row == 's' || row =='f'){
+            if (array[column][row] == 's' || array[column][row] =='f'){
                 ctx.fillStyle = 'green'
             }   
             
             ctx.fillRect(position_from_left, position_from_top, square_width, square_height)
             
             position_from_left += square_width;
+            
+           
         }
         position_from_top += square_height;
         position_from_left = 0;
+        
     }
+    
 }
 function main(){
     const [path, array] = BFS()
