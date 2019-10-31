@@ -116,5 +116,7 @@ export function BFS(){
         array = createMap(dimensions)
         path = solve(array)
     }
+    // console.log(array)
     return [path, array]
 }
+BFS()
