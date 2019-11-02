@@ -1,10 +1,12 @@
-let direction_row = [-1, +1, 0, 0]
+let direction_row = [-1, +1, 0, 0]  
 let direction_column = [0, 0 , +1 , -1]
 
 function enqueue(obj, array){
+    // push node at the end of queue
     array.push(obj)
 }
 function dequeue(array){
+    // return node from beggining of queue
     let value = array.shift()
     if (value == null){
         return -1
@@ -13,7 +15,7 @@ function dequeue(array){
 }
 
 function explore_neighbours(column, row, visited, array, queue, prev, dimensions){
-    /* checks if neighboring rows are reachable */
+    /* checks if neighboring rows are reachable, if yes -> place them on queue*/
     
     for(let i = 0; i< 4; i++){
         let next_row = row + direction_row[i]
@@ -41,6 +43,8 @@ function explore_neighbours(column, row, visited, array, queue, prev, dimensions
 }
 
 function reconstruct_path(node, prev){
+    /*reconstructing path by looking for parent element of each node, 
+    if node has no parent it means that this is statring point */
     let path = []
     console.log(node)
     while(true){
@@ -57,7 +61,7 @@ function reconstruct_path(node, prev){
 function solve(array, starting_column, starting_row, dimensions, finish_column, finish_row){
     // applying BFS algorythm 
     
-    let queue = [] // 
+    let queue = []
     let prev = {} //object for reconstructing path 
     let reached_end = false;
     let visited = array.map(element => { //checks if current row was visited 
@@ -65,22 +69,19 @@ function solve(array, starting_column, starting_row, dimensions, finish_column, 
             row => false
         )
     }) 
-    enqueue([starting_column, starting_row], queue)
+    enqueue([starting_column, starting_row], queue) //add first node to queue
 
-    visited[starting_column][starting_row] = true
+    visited[starting_column][starting_row] = true //mark it as visited
     prev[`${starting_column}${starting_row}`] = {
-        parent: null,
+        parent: null,                               //starting node has no parent element
     }
     
     while (queue){
-        
         let value = dequeue(queue)
         if (value == -1){
             break
         }
         let [column, row] = value
-        
-        
         if (array[column][row] == 'f'){
             reached_end = true;
             break
@@ -95,13 +96,11 @@ function solve(array, starting_column, starting_row, dimensions, finish_column, 
 
 
 export function BFS(board, starting_column, starting_row, dimensions, finish_column, finish_row){
-   
-    // console.log(board)
+    //if path exist function returns it otherwise return -1
     let path = solve(board, starting_column, starting_row, dimensions, finish_column, finish_row)
     if (path == -1){
         return -1
     }
-    // console.log(array)
     return path
 }
-// BFS()
+

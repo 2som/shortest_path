@@ -1,12 +1,12 @@
 import {BFS} from '/BFS.js'
 
 function place_obstacle(e, rects, square_height, square_width, dimensions, ctx){
-    // console.log(rects)
+    /* checks coords clicked on board and compares them with coords of in rects object 
+        if coords are the same function checks if obstacle is placable and places it, 
+        then updates the board by evaluating draw funcion
+    */
     for (let key of Object.keys(rects)){
-        
         if (e.offsetX >= rects[key].x && e.offsetX <= rects[key].x + square_width && e.offsetY >= rects[key].y && e.offsetY <= rects[key].y + square_height ){ 
-            console.log(rects[key])
-            
             if(rects[key].symbol == 'f' || rects[key].symbol == 's'){
                 break;
             }
@@ -16,10 +16,7 @@ function place_obstacle(e, rects, square_height, square_width, dimensions, ctx){
             }else{
                 rects[key].symbol = '.'
             }
-           
-           
         }
-    
     }
     draw(rects, square_height, square_width, dimensions, ctx);
 }
@@ -29,7 +26,6 @@ function place_obstacle(e, rects, square_height, square_width, dimensions, ctx){
 function draw (rects, square_height, square_width, dimensions, ctx){
     // draws rects on canvas element
     for (let column = 0; column < dimensions; column++){
-        // console.log(column)
         for (let row = 0; row < dimensions; row++){
            
             ctx.fillStyle = 'white' 
@@ -46,7 +42,6 @@ function draw (rects, square_height, square_width, dimensions, ctx){
             }
             ctx.strokeStyle = 'black'
             ctx.strokeRect(rects[`${column}${row}`].x, rects[`${column}${row}`].y, square_width, square_height)   
-            
             ctx.fillRect(rects[`${column}${row}`].x,rects[`${column}${row}`].y, square_width, square_height)
         }
     }
@@ -77,8 +72,12 @@ function create_rects(dimensions, square_height, square_width, start_coords, fin
     return rects
 }
 function place_path(rects, path){
-    path.pop()
-    path.shift()
+    //places path on copy of rects obj 
+    // the first and the last element of path should be removed 
+    if (path){
+        path.pop()
+        path.shift()
+    }
     for (let node of path){
         let [column, row] = node.join('')
         rects[`${column}${row}`].symbol = 'p'
@@ -88,18 +87,14 @@ function place_path(rects, path){
 
 function solve_board(rects, dimensions, starting_column, starting_row, finish_column, finish_row, square_height, square_width, ctx){
     let board = create_board(rects, dimensions)
-    
-
-    
-    
     let path = BFS(board, starting_column, starting_row, dimensions, finish_column, finish_row)
-    let rects_copy = JSON.parse(JSON.stringify(rects))
-
-       
-    let solved_board = place_path(rects_copy, path)
-    console.log(solved_board)
-    draw(solved_board, square_height, square_width, dimensions, ctx)
-
+    if(path == -1){
+        return; 
+    }else{
+        let rects_copy = JSON.parse(JSON.stringify(rects))
+        let solved_board = place_path(rects_copy, path)
+        draw(solved_board, square_height, square_width, dimensions, ctx)
+    }
 
 }
 
@@ -107,6 +102,8 @@ function solve_board(rects, dimensions, starting_column, starting_row, finish_co
 
 
 function create_board(rects, dimensions){
+    // returns dimensions x dimensions matrix
+    
     let board = []
     for(let j = 0; j < dimensions; j++){
         let column = []
@@ -133,20 +130,17 @@ function main(){
         row: Math.floor(dimensions/2)
     }
     const canvas = document.getElementById('canvas');
-    
-     
     const ctx = canvas.getContext('2d');
     const board_width = canvas.width;
     const board_height = canvas.height;
     const square_width = Math.floor(board_width / dimensions);
     const square_height = Math.floor(board_height / dimensions);
     
-
-
     let rects = create_rects(dimensions, square_height, square_width, start_coords, finish_coords);
     
     draw(rects, square_height, square_width, dimensions, ctx);
-    canvas.addEventListener("click", (e) => {place_obstacle(e, rects, square_height, square_width, dimensions, ctx)}, false);
+    
+    const obstacles = canvas.addEventListener("click", (e) => {place_obstacle(e, rects, square_height, square_width, dimensions, ctx)}, false);
     
     const solve = document.getElementById('solve').addEventListener('click', () => {
         solve_board(rects, dimensions, start_coords.column, 
@@ -154,6 +148,7 @@ function main(){
         finish_coords.row, square_height, square_width, ctx)})
     
     const clear = document.getElementById('clear').addEventListener('click', function(){
+        //clears board
         rects = create_rects(dimensions, square_height, square_width, start_coords, finish_coords)
         draw(rects, square_height, square_width, dimensions, ctx)
     })
