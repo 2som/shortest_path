@@ -1,80 +1,33 @@
-import {BFS, number_of_rows, number_of_columns} from '/BFS.js'
-import {important_coords} from '/map.js'
-import { dimensions } from './map.js';
+import {BFS} from '/BFS.js'
 
-
-
-const canvas = document.getElementById('canvas');
-canvas.addEventListener("click", something, false)
-const ctx = canvas.getContext('2d');
-let [path, array] = BFS()
-let user_path = []
-
-// console.log(check_patchs(user_path, path))
-let continue_animating = true;
-document.getElementById('checker').addEventListener('click', stop_animating)
-
-function stop_animating(){
-    continue_animating = false;
-}
-
-let width = canvas.width;
-let height = canvas.height;
-let square_width = Math.floor(width / number_of_rows);
-let square_height = Math.floor(height / number_of_columns);
-
-let rects = create_rects(array)
-
-// console.log('rects:', rects)
-
-function something(e){
-   
+function place_obstacle(e, rects, square_height, square_width, dimensions, ctx){
+    // console.log(rects)
     for (let key of Object.keys(rects)){
-        if (rects[key].active == 1 && e.offsetX >= rects[key].x && e.offsetX <= rects[key].x + square_width && e.offsetY >= rects[key].y && e.offsetY <= rects[key].y + square_height ){ 
+        
+        if (e.offsetX >= rects[key].x && e.offsetX <= rects[key].x + square_width && e.offsetY >= rects[key].y && e.offsetY <= rects[key].y + square_height ){ 
+            console.log(rects[key])
             
-            if(user_path.includes(key) == false){
-                user_path.push(key)
-                rects[key].symbol = 'p'
+            if(rects[key].symbol == 'f' || rects[key].symbol == 's'){
+                break;
+            }
+            else if (rects[key].symbol == '.'){
+                
+                rects[key].symbol = '#'
             }else{
-                user_path.splice(user_path.indexOf(key), 1)
                 rects[key].symbol = '.'
             }
+           
+           
         }
-        else{
-            continue
-        }
+    
     }
-    
+    draw(rects, square_height, square_width, dimensions, ctx);
 }
-<<<<<<< HEAD
-function draw(array){
-    let rects = []
-    
-    
 
-    let position_from_left = 0;
-    let position_from_top = 0;
-    let width = canvas.width;
-    let height = canvas.height;
-    let square_width = Math.floor(width / number_of_rows);
-    let square_height = Math.floor(height / number_of_columns);
 
-    for (let column = 0; column<array.length; column++){
-        // console.log(column)
-        for (let row = 0; row< array.length; row++){
-            ctx.fillStyle = 'white' 
-            if (array[column][row] == '#'){
-                ctx.fillStyle = 'grey'
-            }
-            
-            ctx.strokeStyle = 'black'
-            ctx.strokeRect(position_from_left, position_from_top, square_width, square_height)
-            
-            if (array[column][row] == 's' || array[column][row] =='f'){
-=======
-function draw (rects){
-    let position_from_left = 0;
-    let position_from_top = 0;
+
+function draw (rects, square_height, square_width, dimensions, ctx){
+    // draws rects on canvas element
     for (let column = 0; column < dimensions; column++){
         // console.log(column)
         for (let row = 0; row < dimensions; row++){
@@ -83,43 +36,24 @@ function draw (rects){
             if (rects[`${column}${row}`].symbol == '#'){
                 ctx.fillStyle = 'grey'
             }
-            if (rects[`${column}${row}`].symbol == 's' || rects[`${column}${row}`].symbol =='f'){
-               ctx.fillStyle = 'yellow'
+            if (rects[`${column}${row}`].symbol == 's' || rects[`${column}${row}`].symbol == 'f'){
+               ctx.fillStyle = '#19CE23'
             }
+            
             if (rects[`${column}${row}`].symbol == 'p'){
->>>>>>> dd588645b646b33ca0cd3fca0be93f6413971226
-                ctx.fillStyle = 'green'
+                ctx.fillStyle = '#57FF5F'
                 
             }
             ctx.strokeStyle = 'black'
-            ctx.strokeRect(position_from_left, position_from_top, square_width, square_height)   
-            ctx.fillRect(position_from_left, position_from_top, square_width, square_height)
+            ctx.strokeRect(rects[`${column}${row}`].x, rects[`${column}${row}`].y, square_width, square_height)   
             
-            position_from_left += square_width;
-            
-<<<<<<< HEAD
-           
-=======
->>>>>>> dd588645b646b33ca0cd3fca0be93f6413971226
+            ctx.fillRect(rects[`${column}${row}`].x,rects[`${column}${row}`].y, square_width, square_height)
         }
-        
-        position_from_top += square_height;
-        position_from_left = 0;
-        
     }
-<<<<<<< HEAD
-    
-}
-function main(){
-    const [path, array] = BFS()
-    
-    let solved_array = draw_shortest(array, path)
-=======
->>>>>>> dd588645b646b33ca0cd3fca0be93f6413971226
-    
 }
 
-function create_rects(array){
+function create_rects(dimensions, square_height, square_width, start_coords, finish_coords){
+    //saves values of each rect on board
     let position_from_left = 0;
     let position_from_top = 0;
     let rects = {}
@@ -128,12 +62,8 @@ function create_rects(array){
             rects[`${column}${row}`] = {
                 x: position_from_left,
                 y: position_from_top,
-                symbol: array[column][row],
-                active : 1
-            }
-            if (array[column][row] == '#' || array[column][row] == 'f' || array[column][row] == 's'){
+                symbol: '.',
                 
-                rects[`${column}${row}`].active = 0
             }
             position_from_left += square_width;
 
@@ -141,43 +71,92 @@ function create_rects(array){
     position_from_top += square_height;
     position_from_left = 0;
 }
-position_from_top = 0
-return rects
+    rects[`${start_coords.column}${start_coords.row}`].symbol = 's'
+    rects[`${finish_coords.column}${finish_coords.row}`].symbol = 'f'
+
+    return rects
 }
-
-
-
-function play(){
-    draw(rects)
-    
-    if(!continue_animating){
-       alert('break!')
-       
-       path.pop()
-       path.shift()
-       if (!user_path){
-           return false;
-       }
-       let raw_path = path.join(',').split(',')
-       let raw_user_path = user_path.join(',').split(',')
-       console.log('user',raw_user_path)
-       console.log('path', raw_path)
-       if(raw_user_path.length == raw_path.length && raw_user_path.every((value) => raw_path.includes(value))){
-        alert('wlasciwa droga')   
-        return true
-       }
-       else{
-           alert('zle')
-           return false
-       }
-       //    let raw
-       
-    
+function place_path(rects, path){
+    path.pop()
+    path.shift()
+    for (let node of path){
+        let [column, row] = node.join('')
+        rects[`${column}${row}`].symbol = 'p'
     }
-    requestAnimationFrame(play)
+    return rects
+}
+
+function solve_board(rects, dimensions, starting_column, starting_row, finish_column, finish_row, square_height, square_width, ctx){
+    let board = create_board(rects, dimensions)
+    
+
+    
+    
+    let path = BFS(board, starting_column, starting_row, dimensions, finish_column, finish_row)
+    let rects_copy = JSON.parse(JSON.stringify(rects))
+
+       
+    let solved_board = place_path(rects_copy, path)
+    console.log(solved_board)
+    draw(solved_board, square_height, square_width, dimensions, ctx)
+
 
 }
-draw(rects)
-play()
 
+
+
+
+function create_board(rects, dimensions){
+    let board = []
+    for(let j = 0; j < dimensions; j++){
+        let column = []
+        for(let i = 0; i < dimensions; i++){
+           column.push(rects[`${j}${i}`].symbol)
+        }
+        board.push(column)
+    }
+    return board
+}
+
+
+
+
+function main(){
+    
+    const dimensions = 11;
+    const start_coords = {
+        column: 0,
+        row: Math.floor(dimensions/2)
+    }
+    const finish_coords = {
+        column: dimensions - 1,
+        row: Math.floor(dimensions/2)
+    }
+    const canvas = document.getElementById('canvas');
+    
+     
+    const ctx = canvas.getContext('2d');
+    const board_width = canvas.width;
+    const board_height = canvas.height;
+    const square_width = Math.floor(board_width / dimensions);
+    const square_height = Math.floor(board_height / dimensions);
+    
+
+
+    let rects = create_rects(dimensions, square_height, square_width, start_coords, finish_coords);
+    
+    draw(rects, square_height, square_width, dimensions, ctx);
+    canvas.addEventListener("click", (e) => {place_obstacle(e, rects, square_height, square_width, dimensions, ctx)}, false);
+    
+    const solve = document.getElementById('solve').addEventListener('click', () => {
+        solve_board(rects, dimensions, start_coords.column, 
+        start_coords.row, finish_coords.column, 
+        finish_coords.row, square_height, square_width, ctx)})
+    
+    const clear = document.getElementById('clear').addEventListener('click', function(){
+        rects = create_rects(dimensions, square_height, square_width, start_coords, finish_coords)
+        draw(rects, square_height, square_width, dimensions, ctx)
+    })
+}
+main()
 

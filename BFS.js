@@ -1,22 +1,5 @@
-import {createMap, dimensions, important_coords} from '/map.js'
-
-
-
-
-export const number_of_rows = dimensions
-export const number_of_columns = dimensions
-
-const starting_column = important_coords.start.column
-const starting_row = important_coords.start.row
-let end_cords = `${important_coords.finish.column}${important_coords.finish.row}`
-
-
-
-
-//directions
 let direction_row = [-1, +1, 0, 0]
 let direction_column = [0, 0 , +1 , -1]
-
 
 function enqueue(obj, array){
     array.push(obj)
@@ -29,16 +12,17 @@ function dequeue(array){
     return value
 }
 
-function explore_neighbours(column, row, visited, array, queue, prev){
+function explore_neighbours(column, row, visited, array, queue, prev, dimensions){
+    /* checks if neighboring rows are reachable */
     
     for(let i = 0; i< 4; i++){
         let next_row = row + direction_row[i]
         let next_column = column+ direction_column[i]
         
-        if (next_row < 0 || next_row >= number_of_rows){
+        if (next_row < 0 || next_row >= dimensions){
             continue    
         }
-        if (next_column < 0 || next_column >= number_of_columns){
+        if (next_column < 0 || next_column >= dimensions){
             continue
         }
         if (visited[next_column][next_row]){
@@ -70,11 +54,13 @@ function reconstruct_path(node, prev){
    return path
 }
 
-function solve(array){
-    let queue = []
-    let prev = {}
+function solve(array, starting_column, starting_row, dimensions, finish_column, finish_row){
+    // applying BFS algorythm 
+    
+    let queue = [] // 
+    let prev = {} //object for reconstructing path 
     let reached_end = false;
-    let visited = array.map(element => {
+    let visited = array.map(element => { //checks if current row was visited 
         return element.map(
             row => false
         )
@@ -99,24 +85,23 @@ function solve(array){
             reached_end = true;
             break
         }
-        explore_neighbours(column, row, visited, array, queue, prev)
+        explore_neighbours(column, row, visited, array, queue, prev, dimensions)
     }
     if(reached_end){
-        return reconstruct_path([end_cords], prev)
+        return reconstruct_path([`${finish_column}${finish_row}`], prev)
     }
     return -1
 }
 
 
-export function BFS(){
+export function BFS(board, starting_column, starting_row, dimensions, finish_column, finish_row){
    
-    let array = createMap(dimensions)
-    let path = solve(array)
-    while(path == -1){
-        array = createMap(dimensions)
-        path = solve(array)
+    // console.log(board)
+    let path = solve(board, starting_column, starting_row, dimensions, finish_column, finish_row)
+    if (path == -1){
+        return -1
     }
     // console.log(array)
-    return [path, array]
+    return path
 }
-BFS()
+// BFS()
