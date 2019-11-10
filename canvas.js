@@ -1,4 +1,4 @@
-import {BFS} from 'BFS.js'
+import {BFS} from './BFS.js'
 
 function place_obstacle(e, rects, square_height, square_width, dimensions, ctx){
     /* checks coords clicked on board and compares them with coords of in rects object 
