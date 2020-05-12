@@ -29,20 +29,20 @@ function draw (rects, square_height, square_width, dimensions, ctx){
         for (let row = 0; row < dimensions; row++){
            
             ctx.fillStyle = 'white' 
-            if (rects[`${column}${row}`].symbol == '#'){
+            if (rects[`${column}:${row}`].symbol == '#'){
                 ctx.fillStyle = 'grey'
             }
-            if (rects[`${column}${row}`].symbol == 's' || rects[`${column}${row}`].symbol == 'f'){
+            if (rects[`${column}:${row}`].symbol == 's' || rects[`${column}:${row}`].symbol == 'f'){
                ctx.fillStyle = '#19CE23'
             }
             
-            if (rects[`${column}${row}`].symbol == 'p'){
+            if (rects[`${column}:${row}`].symbol == 'p'){
                 ctx.fillStyle = '#57FF5F'
                 
             }
             ctx.strokeStyle = 'black'
-            ctx.strokeRect(rects[`${column}${row}`].x, rects[`${column}${row}`].y, square_width, square_height)   
-            ctx.fillRect(rects[`${column}${row}`].x,rects[`${column}${row}`].y, square_width, square_height)
+            ctx.strokeRect(rects[`${column}:${row}`].x, rects[`${column}:${row}`].y, square_width, square_height)   
+            ctx.fillRect(rects[`${column}:${row}`].x,rects[`${column}:${row}`].y, square_width, square_height)
         }
     }
 }
@@ -54,7 +54,7 @@ function create_rects(dimensions, square_height, square_width, start_coords, fin
     let rects = {}
     for (let column = 0; column < dimensions; column++){
         for (let row = 0; row < dimensions; row++){
-            rects[`${column}${row}`] = {
+            rects[`${column}:${row}`] = {
                 x: position_from_left,
                 y: position_from_top,
                 symbol: '.',
@@ -66,8 +66,8 @@ function create_rects(dimensions, square_height, square_width, start_coords, fin
     position_from_top += square_height;
     position_from_left = 0;
 }
-    rects[`${start_coords.column}${start_coords.row}`].symbol = 's'
-    rects[`${finish_coords.column}${finish_coords.row}`].symbol = 'f'
+    rects[`${start_coords.column}:${start_coords.row}`].symbol = 's'
+    rects[`${finish_coords.column}:${finish_coords.row}`].symbol = 'f'
 
     return rects
 }
@@ -79,8 +79,8 @@ function place_path(rects, path){
         path.shift()
     }
     for (let node of path){
-        let [column, row] = node.join('')
-        rects[`${column}${row}`].symbol = 'p'
+        rects[node].symbol = 'p'
+        
     }
     return rects
 }
@@ -98,17 +98,13 @@ function solve_board(rects, dimensions, starting_column, starting_row, finish_co
 
 }
 
-
-
-
 function create_board(rects, dimensions){
     // returns dimensions x dimensions matrix
-    
     let board = []
     for(let j = 0; j < dimensions; j++){
         let column = []
         for(let i = 0; i < dimensions; i++){
-           column.push(rects[`${j}${i}`].symbol)
+           column.push(rects[`${j}:${i}`].symbol)
         }
         board.push(column)
     }

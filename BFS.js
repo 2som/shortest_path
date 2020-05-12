@@ -36,8 +36,8 @@ function explore_neighbours(column, row, visited, array, queue, prev, dimensions
         enqueue([next_column, next_row], queue)
         visited[next_column][next_row] = true
         
-        prev[`${next_column}${next_row}`] = {
-            parent: [`${column}${row}`]
+        prev[`${next_column}:${next_row}`] = {
+            parent: [`${column}:${row}`]
         }
     }
 }
@@ -46,7 +46,6 @@ function reconstruct_path(node, prev){
     /*reconstructing path by looking for parent element of each node, 
     if node has no parent it means that this is statring point */
     let path = []
-    console.log(node)
     while(true){
         path.unshift(node)
         node = prev[node].parent
@@ -72,7 +71,7 @@ function solve(array, starting_column, starting_row, dimensions, finish_column, 
     enqueue([starting_column, starting_row], queue) //add first node to queue
 
     visited[starting_column][starting_row] = true //mark it as visited
-    prev[`${starting_column}${starting_row}`] = {
+    prev[`${starting_column}:${starting_row}`] = {
         parent: null,                               //starting node has no parent element
     }
     
@@ -89,7 +88,7 @@ function solve(array, starting_column, starting_row, dimensions, finish_column, 
         explore_neighbours(column, row, visited, array, queue, prev, dimensions)
     }
     if(reached_end){
-        return reconstruct_path([`${finish_column}${finish_row}`], prev)
+        return reconstruct_path([`${finish_column}:${finish_row}`], prev)
     }
     return -1
 }
