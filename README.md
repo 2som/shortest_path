@@ -4,5 +4,3 @@ User can place obstacles on board and activate BFS by clicking "solve" button.
 
 to run follow the link below:
 https://2som.github.io/shortest_path/
-
-I am planning to reconstruct this code into OOP soon and replace canvas element.
