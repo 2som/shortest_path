@@ -1,44 +1,4 @@
-import {Board} from './board.js'
-
-const SETTINGS = {
-    canvas: document.getElementById('canvas'),
-    dimensions: 20,
-}
-SETTINGS.rect_width = Math.floor(SETTINGS.canvas.width / SETTINGS.dimensions)
-SETTINGS.rect_height = Math.floor(SETTINGS.canvas.height / SETTINGS.dimensions)
-
-function main(){
-    let rectangles = create_rectangles(SETTINGS) //create empty canvas board
-    draw(rectangles, SETTINGS)
-
-    SETTINGS.canvas.addEventListener('click', (e) => { //if canvas element is clicked, place an obstacle
-        if (SETTINGS.canvas.classList.contains('disabled')) {return}
-        place_obstacle(e, rectangles, SETTINGS )
-        draw(rectangles, SETTINGS);
-    })  
-    
-    document.getElementById('clear').addEventListener('click', (e) =>{ //reset the canvas board
-        rectangles = create_rectangles(SETTINGS)
-        draw(rectangles, SETTINGS)
-        SETTINGS.canvas.classList.remove('disabled');
-       
-    })
-    
-    document.getElementById('solve').addEventListener('click', (e) => {
-        const board = new Board(rectangles, SETTINGS.dimensions)
-        board.solve()
-        SETTINGS.canvas.classList.add('disabled');
-        if(board.is_solved){
-            draw(board.graphic_representation, SETTINGS)
-        }
-        else{
-            alert('There is no valid path')
-            document.getElementById('clear').click();
-        }
-    })
-}
-
-function create_rectangles(settings_obj){
+export function create_rectangles(settings_obj){
     let position_from_left = 0;
     let position_from_top = 0;
     let rects = {}
@@ -60,7 +20,7 @@ function create_rectangles(settings_obj){
     return rects
 }
 
-function draw(rects, settings_obj){
+export function draw(rects, settings_obj){
     const ctx = settings_obj.canvas.getContext('2d');
     for (let column = 0; column < settings_obj.dimensions; column++){
         for (let row = 0; row < settings_obj.dimensions; row++){ 
@@ -85,7 +45,7 @@ function draw(rects, settings_obj){
     }
 }
 
-function place_obstacle(e, rects, settings_obj){
+export function place_obstacle(e, rects, settings_obj){
     /* checks coords clicked on board and compares them with coords in rects object 
         if coords are the same: function checks if obstacle is placeable (you can't place obstacle on starting and ending point) and places it */
     for (let key of Object.keys(rects)){
@@ -102,5 +62,3 @@ function place_obstacle(e, rects, settings_obj){
         }
     }
 }
-
-main();
