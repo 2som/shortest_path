@@ -1,5 +1,5 @@
-import * as ui from './app/user_interface.js'
-import {Board} from './app/board.js'
+import * as ui from './user_interface.js'
+import {Board} from './board.js'
 
 const SETTINGS = {
     canvas: document.getElementById('canvas'),
